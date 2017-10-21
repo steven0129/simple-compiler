@@ -1,0 +1,21 @@
+// A program to sum 1 to n
+int main()
+{
+    int n;
+    int s;
+
+    read n;
+    if(n<0) {
+        write -1;
+        exit 0;
+    } else {
+        s=0;
+    }
+    while(n>0) {
+        s=s+n;
+        n=n-1;
+    }
+
+    write s;
+    return 0;
+}
