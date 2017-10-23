@@ -1,4 +1,4 @@
-OBJ = main.o lex.yy.o
+OBJ = lex.yy.o
 
 scanner: $(OBJ)
 	gcc -o scanner $(OBJ) -lfl
@@ -8,6 +8,3 @@ lex.yy.o: lex.yy.c lotus.tab.h
 
 lex.yy.c: lotus.l lotus.tab.h
 	flex lotus.l
-
-main.o: lotus.tab.h
-	gcc -c main.c

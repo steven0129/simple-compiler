@@ -1,5 +1,5 @@
 %{
-#include<stdlib.h>
+#include"lotus.tab.h"
 void yyerror(int, char*);
 %}
 %x comment
