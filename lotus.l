@@ -4,8 +4,8 @@
 %x comment
 %option noyywrap
 
+token [a-zA-Z][A-Za-z_0-9]+
 delim [ \t\n\r]
-letter [A-Za-z]
 digit [0-9]
 reversedWord "else"|"exit"|"int"|"if"|"read"|"return"|"while"|"write"
 %%
@@ -14,9 +14,10 @@ reversedWord "else"|"exit"|"int"|"if"|"read"|"return"|"while"|"write"
 <comment>. /*do nothing*/;
 
 {delim}+ /*do nothing*/;
-{reversedWord} { printf("Keywork: %s \n", yytext); }
-{digit}+ { printf("Integer Constant: %s \n", yytext); }
+{reversedWord} { printf("Keywork: %s\n", yytext); }
+{digit}+ { printf("Integer Constant: %s\n", yytext); }
 (\+|\-|\*|\/|\%|\=\=|\!\=|\>\=|\>|\<\=|\<|\&\&|\|\||\!|\=|\;|\,|\(|\)|\{|\}) { printf("Operator: %s \n", yytext); }
+{token} { printf("Identifier: %s\n", yytext); }
 . /*do nothing*/;
 %%
 
