@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is project to implement "lotus compiler"
+This is a project to implement "lotus compiler"
 
 ## Quick Start
 
