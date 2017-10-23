@@ -2,3 +2,4 @@ test/
 src/
 *.l.swp
 *.swp
+.swp
