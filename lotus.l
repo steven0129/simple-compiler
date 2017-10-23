@@ -22,6 +22,20 @@ operator "+"|"-"|"*"|"/"|"%"|"=="|"!="|">="|">"|"<="|"<"|"&&"|"||"|"!"|"="|";"|"
 . /*do nothing*/;
 %%
 
-main() {
-    yylex();
+main(int argc,char** argv) {
+    if(argc==3 && strcmp(argv[1], "-s")==0) {
+        FILE *file;
+        file=fopen(argv[2], "r");
+        if(!file) {
+            fprintf(stderr, "Could not open %s\n", argv[2]);
+            exit(1);
+        }
+
+        yyin=file;
+        yylex();
+    } else {
+        printf("Usage: ./scanner -s file.lotus\n");
+    }
+
+    return 0;
 }
