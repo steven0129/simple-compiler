@@ -1,6 +1,8 @@
 %{
 #include"lotus.tab.h"
 void yyerror(int, char*);
+int errorCnt=0;
+char errorMsg[100][100];
 %}
 %x comment
 %option noyywrap
@@ -23,9 +25,9 @@ operator "+"|"-"|"*"|"/"|"%"|"=="|"!="|">="|">"|"<="|"<"|"&&"|"||"|"!"|"="|";"|"
 {token} { printf("Identifier: %s\n", yytext); }
 . { yyerror(yylineno, yytext); }
 %%
-
 void yyerror(int lineNum, char* token) {
-    fprintf(stderr, "Lexical error: line %d: unknown character %c\n", lineNum, token[0]);
+    sprintf(errorMsg[errorCnt], "Lexical error: line %d: unknown character %c", lineNum, token[0]);
+    errorCnt++;
 }
 
 int main(int argc,char** argv) {
@@ -39,6 +41,10 @@ int main(int argc,char** argv) {
 
         yyin=file;
         yylex();
+
+        int i=0;
+        for(i=0; i<errorCnt; i++)
+            printf("%s\n", errorMsg[i]);
     } else {
         printf("Usage: ./scanner -s file.lotus\n");
     }
