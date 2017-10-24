@@ -8,3 +8,6 @@ lex.yy.o: lex.yy.c lotus.tab.h
 
 lex.yy.c: lotus.l lotus.tab.h
 	flex lotus.l
+
+clean:
+	rm -f *.o scanner lex.yy.c
