@@ -2,7 +2,7 @@
 #include"lotus.tab.h"
 void yyerror(int, char*);
 int errorCnt=0;
-char errorMsg[100][100];
+char errorMsg[10000][44];
 %}
 %x comment
 %option noyywrap
