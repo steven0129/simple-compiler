@@ -44,7 +44,7 @@ int main(int argc,char** argv) {
 
         int i=0;
         for(i=0; i<errorCnt; i++)
-            printf("%s\n", errorMsg[i]);
+            fprintf(stderr, "%s\n", errorMsg[i]);
     } else {
         printf("Usage: ./scanner -s file.lotus\n");
     }
