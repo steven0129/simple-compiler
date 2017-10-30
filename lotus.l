@@ -68,12 +68,9 @@ int main(int argc,char** argv) {
         int token;
         while(token=yylex()) {
             switch(token) {
-                case ERROR: {
+                case ERROR: 
                     yyerror(yylval.integer, errorToken);
                     break;
-                }
-                    
-                    
                 case ADD:
                 case SUB:
                 case MUL:
@@ -123,6 +120,20 @@ int main(int argc,char** argv) {
                         if(keyword==0) printf("Identifier: %s\n", yylval.string);
                     }
                     
+                    break;
+            }
+        }
+    } else if(argc==2){
+        FILE *file;
+        file=fopen(argv[1], "r");
+        if(!file) exit(1);
+
+        yyin=file;
+        int token;
+        while(token=yylex()) {
+            switch(token) {
+                case ERROR:
+                    yyerror(yylval.integer, errorToken);
                     break;
             }
         }
