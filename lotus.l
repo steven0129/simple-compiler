@@ -105,21 +105,10 @@ int main(int argc,char** argv) {
                 case RETURN:
                 case WHILE:
                 case WRITE:
-                case IDENTIFIER: {
-                        int keyword=0;
-                        int reversedWord[8] = {ELSE,EXIT,INT,IF,READ,RETURN,WHILE,WRITE};
-                        int i=0;
-                        for(i=0; i<8;i++) {
-                            if(reversedWord[i]==token)  {
-                                printf("Keyword: %s\n", yylval.string);
-                                keyword=1;
-                                break;
-                            }
-                        }
-
-                        if(keyword==0) printf("Identifier: %s\n", yylval.string);
-                    }
-                    
+                    printf("Keyword: %s\n", yylval.string);
+                    break;
+                case IDENTIFIER: 
+                    printf("Identifier: %s\n", yylval.string);
                     break;
             }
         }
