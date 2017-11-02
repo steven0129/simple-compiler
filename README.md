@@ -8,6 +8,6 @@ This is a project to implement "lotus compiler"
 
 ```
 $ make
-$ ./sacnner sample/sample2.lotus
-$ ./scanner -s sample/sample2.lotus
+$ ./sacnner < sample/sample2.lotus
+$ ./scanner -s < sample/sample2.lotus
 ```
