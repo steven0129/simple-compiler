@@ -59,12 +59,7 @@ operator "+"|"-"|"*"|"/"|"%"|"=="|"!="|">="|">"|"<="|"<"|"&&"|"||"|"!"|"="|";"|"
 %%
 
 int main(int argc,char** argv) {
-    if(argc==3 && strcmp(argv[1], "-s")==0) {
-        FILE *file;
-        file=fopen(argv[2], "r");
-        if(!file) exit(1);
-
-        yyin=file;
+    if(argc==2 && strcmp(argv[1], "-s")==0) {
         int token;
         while(token=yylex()) {
             switch(token) {
@@ -112,12 +107,7 @@ int main(int argc,char** argv) {
                     break;
             }
         }
-    } else if(argc==2){
-        FILE *file;
-        file=fopen(argv[1], "r");
-        if(!file) exit(1);
-
-        yyin=file;
+    } else if(argc==1){
         int token;
         while(token=yylex()) {
             switch(token) {
