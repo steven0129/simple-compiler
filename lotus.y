@@ -16,6 +16,7 @@ int debug=0;
 
 %locations
 %token IDENTIFIER
+%token INTEGER
 %token OPENP CLOSEP // ( )
 %token BIGOPENP BIGCLOSEP // { }
 %token INT // int
@@ -72,11 +73,11 @@ statement:
     ;
 
 read_statement:
-    READ IDENTIFIER SEMICOLON { DBG( fprintf(stdout, "read_statement → read Identifier ;\n"); ) }
+    READ IDENTIFIER SEMICOLON { DBG( fprintf(stdout, "read_statement -> read Identifier ;\n"); ) }
     ;
 
 write_statement:
-    WRITE arith_expression SEMICOLON { DBG( fprintf(stdout, "write_statement → write  arith_expression ;\n"); ) }
+    WRITE arith_expression SEMICOLON { DBG( fprintf(stdout, "write_statement -> write  arith_expression ;\n"); ) }
     ;
 
 exit_statement:
@@ -143,7 +144,7 @@ arith_factor:
     ;
 
 arith_primary:
-    INT { DBG( fprintf(stdout, "arith_primary -> Integer\n"); ) }
+    INTEGER { DBG( fprintf(stdout, "arith_primary -> Integer\n"); ) }
     | IDENTIFIER { DBG( fprintf(stdout, "arith_primary -> Identifier\n"); ) }
     | OPENP arith_expression CLOSEP { DBG( fprintf(stdout, "arith_primary -> ( arith_expression )\n"); ) }
     ;

@@ -18,7 +18,7 @@ operator "+"|"-"|"*"|"/"|"%"|"=="|"!="|">="|">"|"<="|"<"|"&&"|"||"|"!"|"="|";"|"
 <COMMENT>. /*do nothing*/;
 
 {delim}   /*do nothing*/;
-
+{digit}+ { yylval.integer=atoi(yytext); return INTEGER; }
 {operator} {
     if(strcmp(yytext, "+")==0) { yylval.string=yytext; return ADD; }
     else if(strcmp(yytext, "-")==0) { yylval.string=yytext; return SUB; }
