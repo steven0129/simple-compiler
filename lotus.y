@@ -49,7 +49,7 @@ function_body:
     ;
 
 variable_declarations: 
-    %empty { DBG( fprintf(stdout, "variable_declarations -> empty"); ) }
+    %empty { DBG( fprintf(stdout, "variable_declarations -> empty\n"); ) }
     |   variable_declarations variable_declaration { DBG( fprintf(stdout, "variable_declarations -> variable_declarations variable_declaration\n"); ) }
     ;
 
@@ -85,12 +85,12 @@ exit_statement:
     ;
 
 while_statement:
-    WHILE OPENP bool_expression CLOSEP statement { DBG( fprintf(stdout, "while_statement -> while ( bool_expression ) statement"); ) }
+    WHILE OPENP bool_expression CLOSEP statement { DBG( fprintf(stdout, "while_statement -> while ( bool_expression ) statement\n"); ) }
     ;
 
 if_statement:
-    IF OPENP bool_expression CLOSEP statement %prec IFX { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement"); ) }
-    |   IF OPENP bool_expression CLOSEP statement ELSE statement { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement else statement"); ) }
+    IF OPENP bool_expression CLOSEP statement %prec IFX { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement\n"); ) }
+    |   IF OPENP bool_expression CLOSEP statement ELSE statement { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement else statement\n"); ) }
     ;
 
 bool_expression:
