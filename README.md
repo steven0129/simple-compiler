@@ -1,5 +1,7 @@
 # Lotus compiler
 
+![](https://travis-ci.org/steven0129/simple-compiler.svg?branch=master)
+
 ## Introduction
 
 This is a project to implement "lotus compiler"
