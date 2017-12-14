@@ -1,13 +1,22 @@
-OBJ = lex.yy.o
+OBJ = lex.yy.o lotus.tab.o
+CC = gcc
+LEX = flex
+SYNTAX = bison
 
-scanner: $(OBJ)
-	gcc -o scanner $(OBJ) -lfl
+parser: $(OBJ)
+	$(CC) $(OBJ) -o parser -ll -ly
 
 lex.yy.o: lex.yy.c lotus.tab.h
-	gcc -c lex.yy.c
+	$(CC) -c lex.yy.c
 
 lex.yy.c: lotus.l lotus.tab.h
-	flex lotus.l
+	$(LEX) lotus.l
+
+lotus.tab.o: lotus.tab.c lotus.tab.h
+	$(CC) -c lotus.tab.c
+
+lotus.tab.c lotus.tab.h: lotus.y
+	$(SYNTAX) -d lotus.y
 
 clean:
-	rm -f *.o scanner lex.yy.c
+	rm -f *.o *.c *.h parser
