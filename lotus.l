@@ -1,9 +1,9 @@
 %{
-#include"lotus.tab.h"
-char* errorToken;
-void yyerror(int, char*);
-union YYSTYPE yylval;
+#include <stdio.h>
+#include "lotus.tab.h"
+extern YYSTYPE yylval;
 %}
+
 %x COMMENT
 %option yylineno
 
@@ -11,14 +11,15 @@ identifier [A-Za-z_0-9][A-Za-z_0-9]*
 delim [ \t\n\r]
 digit [0-9]
 operator "+"|"-"|"*"|"/"|"%"|"=="|"!="|">="|">"|"<="|"<"|"&&"|"||"|"!"|"="|";"|","|"("|")"|"{"|"}"
+
 %%
 "//" { BEGIN(COMMENT); }
 <COMMENT>\n { BEGIN(INITIAL); }
 <COMMENT>. /*do nothing*/;
 
-{delim}+ /*do nothing*/;
-{digit}+ { yylval.integer=atoi(yytext); return INTEGER; }
-{operator} { 
+{delim}   /*do nothing*/;
+
+{operator} {
     if(strcmp(yytext, "+")==0) { yylval.string=yytext; return ADD; }
     else if(strcmp(yytext, "-")==0) { yylval.string=yytext; return SUB; }
     else if(strcmp(yytext, "*")==0) { yylval.string=yytext; return MUL; }
@@ -55,72 +56,10 @@ operator "+"|"-"|"*"|"/"|"%"|"=="|"!="|">="|">"|"<="|"<"|"&&"|"||"|"!"|"="|";"|"
 }
 
 
-. { yylval.integer=yylineno; errorToken=yytext; return ERROR; }
+.   return yytext[0];
 %%
 
-int main(int argc,char** argv) {
-    if(argc==2 && strcmp(argv[1], "-s")==0) {
-        int token;
-        while(token=yylex()) {
-            switch(token) {
-                case ERROR: 
-                    yyerror(yylval.integer, errorToken);
-                    break;
-                case ADD:
-                case SUB:
-                case MUL:
-                case DIV:
-                case MOD:
-                case EQV:
-                case NONEQV:
-                case GREEQV:
-                case GRE:
-                case LESSEQV:
-                case LESS:
-                case AND:
-                case OR:
-                case NOT:
-                case ASSIGN:
-                case SEMICOLON:
-                case COMMA:
-                case OPENP:
-                case CLOSEP:
-                case BIGCLOSEP:
-                case BIGOPENP:
-                    printf("Operator: %s\n", yylval.string);
-                    break;
-                case INTEGER:
-                    printf("Integer Constant: %d\n", yylval.integer);
-                    break;
-                case ELSE:
-                case EXIT:
-                case INT:
-                case IF:
-                case READ:
-                case RETURN:
-                case WHILE:
-                case WRITE:
-                    printf("Keyword: %s\n", yylval.string);
-                    break;
-                case IDENTIFIER: 
-                    printf("Identifier: %s\n", yylval.string);
-                    break;
-            }
-        }
-    } else if(argc==1){
-        int token;
-        while(token=yylex()) {
-            switch(token) {
-                case ERROR:
-                    yyerror(yylval.integer, errorToken);
-                    break;
-            }
-        }
-    }
-
-    return 0;
-}
-
-void yyerror(int lineNum, char* token) {
-    fprintf(stderr, "Lexical error: line %d: unknown character %c\n", lineNum, token[0]);
+void yyerror(const char *msg)
+{
+    fprintf(stderr,"Syntax error: line %d\n", yylineno);
 }
