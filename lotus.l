@@ -56,7 +56,7 @@ operator "+"|"-"|"*"|"/"|"%"|"=="|"!="|">="|">"|"<="|"<"|"&&"|"||"|"!"|"="|";"|"
 }
 
 
-.   return yytext[0];
+.   /* do nothing */
 %%
 
 void yyerror(const char *msg)
