@@ -11,5 +11,10 @@ This is a project to implement "lotus compiler"
 ```
 $ make
 $ ./parser < sample/sample3.lotus
+```
+
+## Print sementic rule
+
+```
 $ ./parser -p < sample/sample3.lotus
 ```
