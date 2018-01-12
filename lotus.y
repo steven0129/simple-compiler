@@ -88,7 +88,7 @@ variable_declaration:
         DBG( fprintf(stdout, "variable_declaration -> int Identifier ;\n"); )
         IDENT( 0, fprintf(stdout, "%s:", $2); )
         IDENT( 1, fprintf(stdout, ".word"); )
-        IDENT( 1, fprintf(stdout, "0"); )
+        IDENT( 1, fprintf(stdout, "0 # int %s", $2); )  // int IDENTIFIER
         IDENT( 0, fprintf(stdout, "\n"); )
     }
     ;
@@ -112,8 +112,12 @@ read_statement:
     READ IDENTIFIER SEMICOLON { 
         DBG( fprintf(stdout, "read_statement -> read Identifier ;\n"); )
         IDENT( 1, fprintf(stdout, "li"); )
-        IDENT( 1, fprintf(stdout, "$v0, 5  # read n\n"); )
+        IDENT( 1, fprintf(stdout, "$v0, 5\n"); ) // read
         IDENT( 1, fprintf(stdout, "syscall\n"); )
+        IDENT( 1, fprintf(stdout, "la"); )
+        IDENT( 1, fprintf(stdout, "$t0, %s\n", $2); )
+        IDENT( 1, fprintf(stdout, "sw"); )
+        IDENT( 1, fprintf(stdout, "$v0, 0($t0) # read n\n"); ) // read n
     }
     ;
 
