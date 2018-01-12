@@ -1,12 +1,20 @@
 %{
-#include<stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #define YYDEBUG 1
 
 #ifndef DBG
 int debug=0;
 #define DBG(...) \
     if(debug) { __VA_ARGS__; }
+#endif
 
+#ifndef IDENT
+#define IDENT(NUM, ...) \
+    int i; \
+    for(i=0; i< NUM; i++) fprintf(stdout, "\t"); \
+    __VA_ARGS__;
 #endif
 %}
 %union {
@@ -15,33 +23,35 @@ int debug=0;
 }
 
 %locations
-%token IDENTIFIER
-%token INTEGER
-%token OPENP CLOSEP // ( )
-%token BIGOPENP BIGCLOSEP // { }
-%token INT // int
-%token SEMICOLON // ;
-%token ASSIGN // =
-%token COMMA // ,
-%token AND OR // &&, ||
-%token NOT // !
-%token EQV NONEQV GREEQV GRE LESSEQV LESS
-%token ADD SUB // +, -
-%token MUL DIV MOD // *, /, %
+%token<string> IDENTIFIER
+%token<integer> INTEGER
+%token<string> OPENP CLOSEP // ( )
+%token<string> BIGOPENP BIGCLOSEP // { }
+%token<string> INT // int
+%token<string> SEMICOLON // ;
+%token<string> ASSIGN // =
+%token<string> COMMA // ,
+%token<string> AND OR // &&, ||
+%token<string> NOT // !
+%token<string> EQV NONEQV GREEQV GRE LESSEQV LESS
+%token<string> ADD SUB // +, -
+%token<string> MUL DIV MOD // *, /, %
 
-%token IF // if
+%token<string> IF // if
 %nonassoc IFX
 %nonassoc ELSE // else
-%token EXIT // exit
-%token WHILE // while
-%token WRITE READ // write read
-%token RETURN // return
+%token<string> EXIT // exit
+%token<string> WHILE // while
+%token<string> WRITE READ // write read
+%token<string> RETURN // return
 %right UMINUS
 %right UNOT
 %%
 
 program: 
-    IDENTIFIER OPENP CLOSEP function_body { DBG( fprintf(stdout, "program -> Identifier ( ) function_body\n"); ) }
+    IDENTIFIER OPENP CLOSEP function_body { 
+        DBG( fprintf(stdout, "program -> Identifier ( ) function_body\n"); ) 
+    }
     ;
 
 function_body: 
@@ -50,11 +60,14 @@ function_body:
 
 variable_declarations: 
     %empty { DBG( fprintf(stdout, "variable_declarations -> empty\n"); ) }
-    |   variable_declarations variable_declaration { DBG( fprintf(stdout, "variable_declarations -> variable_declarations variable_declaration\n"); ) }
+    |   variable_declarations variable_declaration {  DBG( fprintf(stdout, "variable_declarations -> variable_declarations variable_declaration\n"); ) }
     ;
 
 variable_declaration: 
-    INT IDENTIFIER SEMICOLON { DBG( fprintf(stdout, "variable_declaration -> int Identifier ;\n"); ) }
+    INT IDENTIFIER SEMICOLON { 
+        DBG( fprintf(stdout, "variable_declaration -> int Identifier ;\n"); )
+        printf("%s %s %s\n",$1, $2, $3);
+    }
     ;
 
 statements:

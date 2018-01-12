@@ -1,0 +1,6 @@
+// A program to sum 1 to n 
+sum()
+{
+    int n;
+    int s;
+}
