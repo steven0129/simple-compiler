@@ -49,24 +49,32 @@ int debug=0;
 %%
 
 program: 
-    IDENTIFIER OPENP CLOSEP function_body { 
-        DBG( fprintf(stdout, "program -> Identifier ( ) function_body\n"); ) 
-    }
+    IDENTIFIER OPENP CLOSEP function_body { DBG( fprintf(stdout, "program -> Identifier ( ) function_body\n"); ) }
     ;
 
 function_body: 
-    BIGOPENP variable_declarations statements BIGCLOSEP { DBG( fprintf(stdout, "function_body -> { variable_declarations statements }\n"); ) }
+    BIGOPENP emit_data variable_declarations emit_text statements BIGCLOSEP { DBG( fprintf(stdout, "function_body -> { variable_declarations statements }\n"); ) }
+    ;
+
+emit_data:
+    %empty { fprintf(stdout, ".data\n"); }
+    ;
+
+emit_text:
+    %empty { fprintf(stdout, ".text\n"); }
     ;
 
 variable_declarations: 
     %empty { DBG( fprintf(stdout, "variable_declarations -> empty\n"); ) }
-    |   variable_declarations variable_declaration {  DBG( fprintf(stdout, "variable_declarations -> variable_declarations variable_declaration\n"); ) }
+    |   variable_declarations variable_declaration {  
+            DBG( fprintf(stdout, "variable_declarations -> variable_declarations variable_declaration\n"); ) 
+            
+        }
     ;
 
 variable_declaration: 
     INT IDENTIFIER SEMICOLON { 
         DBG( fprintf(stdout, "variable_declaration -> int Identifier ;\n"); )
-        printf("%s %s %s\n",$1, $2, $3);
     }
     ;
 
