@@ -11,9 +11,9 @@ int debug=0;
 #endif
 
 #ifndef IDENT
+int iCount;
 #define IDENT(NUM, ...) \
-    int i; \
-    for(i=0; i< NUM; i++) fprintf(stdout, "\t"); \
+    for(iCount=0; iCount< NUM; iCount++) fprintf(stdout, "\t"); \
     __VA_ARGS__;
 #endif
 %}
@@ -53,16 +53,27 @@ program:
     ;
 
 function_body: 
-    BIGOPENP emit_data variable_declarations emit_text statements BIGCLOSEP { DBG( fprintf(stdout, "function_body -> { variable_declarations statements }\n"); ) }
+    BIGOPENP emit_data variable_declarations emit_text statements emit_terminate BIGCLOSEP { DBG( fprintf(stdout, "function_body -> { variable_declarations statements }\n"); ) }
     ;
 
 emit_data:
-    %empty { fprintf(stdout, ".data\n"); }
+    %empty { IDENT(1,  fprintf(stdout, ".data\n"); ) }
     ;
 
 emit_text:
-    %empty { fprintf(stdout, ".text\n"); }
+    %empty { 
+        IDENT(1, fprintf(stdout, ".text\n"); )
+        IDENT(0, fprintf(stdout, "main:\n"); )
+    }
     ;
+
+emit_terminate:
+    %empty {
+        IDENT(1, fprintf(stdout, "li"); )
+        IDENT(1, fprintf(stdout, "$v0, 10"); )
+        IDENT(1, fprintf(stdout, "# terminate program\n"); )
+        IDENT(1, fprintf(stdout, "syscall\n"); )
+    }
 
 variable_declarations: 
     %empty { DBG( fprintf(stdout, "variable_declarations -> empty\n"); ) }
@@ -75,6 +86,10 @@ variable_declarations:
 variable_declaration: 
     INT IDENTIFIER SEMICOLON { 
         DBG( fprintf(stdout, "variable_declaration -> int Identifier ;\n"); )
+        IDENT( 0, fprintf(stdout, "%s:", $2); )
+        IDENT( 1, fprintf(stdout, ".word"); )
+        IDENT( 1, fprintf(stdout, "0"); )
+        IDENT( 0, fprintf(stdout, "\n"); )
     }
     ;
 
