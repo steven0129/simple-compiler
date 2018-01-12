@@ -57,7 +57,7 @@ function_body:
     ;
 
 emit_data:
-    %empty { IDENT(1,  fprintf(stdout, ".data\n"); ) }
+    %empty { IDENT(1, fprintf(stdout, ".data\n"); ) }
     ;
 
 emit_text:
@@ -109,7 +109,12 @@ statement:
     ;
 
 read_statement:
-    READ IDENTIFIER SEMICOLON { DBG( fprintf(stdout, "read_statement -> read Identifier ;\n"); ) }
+    READ IDENTIFIER SEMICOLON { 
+        DBG( fprintf(stdout, "read_statement -> read Identifier ;\n"); )
+        IDENT( 1, fprintf(stdout, "li"); )
+        IDENT( 1, fprintf(stdout, "$v0, 5  # read n\n"); )
+        IDENT( 1, fprintf(stdout, "syscall\n"); )
+    }
     ;
 
 write_statement:

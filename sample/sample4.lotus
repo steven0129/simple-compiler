@@ -3,4 +3,6 @@ sum()
 {
     int n;
     int s;
+
+    read n;
 }
