@@ -230,9 +230,24 @@ arith_expression:
     ;
 arith_term: 
     arith_factor { DBG( fprintf(stdout, "arith_term -> arith_factor\n"); ) }
-    | arith_term MUL arith_factor { DBG( fprintf(stdout, "arith_term -> arith_term * arith_factor\n"); ) }
-    | arith_term DIV arith_factor { DBG( fprintf(stdout, "arith_term -> arith_term / arith_factor\n"); ) }
-    | arith_term MOD arith_factor { DBG( fprintf(stdout, "arith_term -> arith_term % arith_factor\n"); ) }
+    | arith_term MUL arith_factor { 
+            DBG( fprintf(stdout, "arith_term -> arith_term * arith_factor\n"); )
+            IDENT( 1, fprintf(stdout, "mul"); )
+            IDENT( 1, fprintf(stdout, "$t0, $t0, $t1\n"); )
+            registerCount=0;
+        }
+    | arith_term DIV arith_factor { 
+            DBG( fprintf(stdout, "arith_term -> arith_term / arith_factor\n"); )
+            IDENT( 1, fprintf(stdout, "div"); )
+            IDENT( 1, fprintf(stdout, "$t0, $t0, $t1\n"); )
+            registerCount=0;
+        }
+    | arith_term MOD arith_factor { 
+            DBG( fprintf(stdout, "arith_term -> arith_term % arith_factor\n"); )
+            IDENT( 1, fprintf(stdout, "rem"); )
+            IDENT( 1, fprintf(stdout, "$t0, $t0, $t1\n"); )
+            registerCount=0;
+        }
     ;
 arith_factor:
     arith_primary { DBG( fprintf(stdout, "arith_factor -> arith_primary\n"); ) }
