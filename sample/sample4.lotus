@@ -9,8 +9,13 @@ sum()
     if (n < 1) {
         write -1;
     } else {
-        s = 2;
-        while(n > 0) {}
+        s = 0;
+        while(n > 0) {
+            s = s + n;
+            n = n - 1;
+        }
+
+        write s;
     }
 
     exit;
