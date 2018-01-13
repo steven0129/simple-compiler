@@ -191,16 +191,12 @@ bool_primary:
     |   arith_expression GRE arith_expression { 
             DBG( fprintf(stdout, "bool_primary -> arith_expression > arith_expression\n"); )
             int absVal=abs( $<integer>3 );
-            IDENT( 1, fprintf(stdout, "lw"); )
-            IDENT( 1, fprintf(stdout, "$t0, 0($t0)\n"); )
             $<string>$ = $<string>2;
         }
     |   arith_expression GREEQV arith_expression { DBG( fprintf(stdout, "bool_primary -> arith_expression >= arith_expression\n"); ) }
     |   arith_expression LESS arith_expression { 
             DBG( fprintf(stdout, "bool_primary -> arith_expression < arith_expression\n"); )
             int absVal=abs( $<integer>3 );
-            IDENT( 1, fprintf(stdout, "lw"); )
-            IDENT( 1, fprintf(stdout, "$t0, 0($t0)\n"); )
             $<string>$ = $<string>2;
         }
     |   arith_expression LESSEQV arith_expression { DBG( fprintf(stdout, "bool_primary -> arith_expression <= arith_expression\n"); ) }
@@ -212,7 +208,7 @@ assignment_statement:
     IDENTIFIER ASSIGN arith_expression SEMICOLON { 
         DBG( fprintf(stdout, "assignment_statement -> Identifier = arith_expression ;\n") )
         IDENT( 1, fprintf(stdout, "la"); )
-        IDENT( 1, fprintf(stdout, "$t1, s\n"); )
+        IDENT( 1, fprintf(stdout, "$t1, %s\n", $<string>1); )
         IDENT( 1, fprintf(stdout, "sw"); )
         IDENT( 1, fprintf(stdout, "$t0, 0($t1)\n"); )
     }
