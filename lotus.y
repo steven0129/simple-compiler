@@ -124,7 +124,7 @@ read_statement:
         IDENT( 1, fprintf(stdout, "la"); )
         IDENT( 1, fprintf(stdout, "$t0, %s\n", $2); )
         IDENT( 1, fprintf(stdout, "sw"); )
-        IDENT( 1, fprintf(stdout, "$v0, 0($t0) # read n\n"); ) // read n
+        IDENT( 1, fprintf(stdout, "$v0, 0($t0)\n"); ) // read variable
     }
     ;
 
@@ -142,17 +142,16 @@ while_statement:
 
 if_statement:
     IF OPENP bool_expression emit_branch CLOSEP emit_label statement emit_label { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement\n"); ) }
-    | IF OPENP bool_expression emit_branch CLOSEP emit_label statement ELSE emit_label statement { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement else statement\n"); ) }
+    | IF OPENP bool_expression emit_branch CLOSEP emit_label statement ELSE emit_label statement emit_label { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement else statement\n"); ) }
     ;
 
 emit_branch:
     %empty {
-        if(strcmp($<string>0, "<") == 0) {
-            IDENT( 1, fprintf(stdout, "blt"); )
-            IDENT( 1, fprintf(stdout, "$t0, $t1, L%d\n", ifCount); )
-            IDENT( 1, fprintf(stdout, "b"); )
-            IDENT( 1, fprintf(stdout, "L%d\n", ifCount+1); )
-        }
+        if(strcmp($<string>0, "<") == 0)  IDENT( 1, fprintf(stdout, "blt"); )
+        
+        IDENT( 1, fprintf(stdout, "$t0, $t1, L%d\n", ifCount); )
+        IDENT( 1, fprintf(stdout, "b"); )
+        IDENT( 1, fprintf(stdout, "L%d\n", ifCount+1); )
     }
     ;
 

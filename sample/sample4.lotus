@@ -8,5 +8,7 @@ sum()
 
     if (n < -1) {
         write -1; exit;
+    } else {
+        write -1;
     }
 }
