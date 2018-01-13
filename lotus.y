@@ -11,11 +11,20 @@ int debug=0;
 #endif
 
 #ifndef IDENT
-int iCount;
+int iCount=0;
 #define IDENT(NUM, ...) \
     for(iCount=0; iCount< NUM; iCount++) fprintf(stdout, "\t"); \
     __VA_ARGS__;
 #endif
+
+int ifCount=1;
+
+void emitLabel() {
+    char temp[2];
+    sprintf(temp, "%d", ifCount);
+    IDENT( 0, fprintf(stdout, "L%s:\n", temp); )
+}
+
 %}
 %union {
     int integer;
@@ -74,13 +83,11 @@ emit_terminate:
         IDENT(1, fprintf(stdout, "# terminate program\n"); )
         IDENT(1, fprintf(stdout, "syscall\n"); )
     }
+    ;
 
 variable_declarations: 
     %empty { DBG( fprintf(stdout, "variable_declarations -> empty\n"); ) }
-    |   variable_declarations variable_declaration {  
-            DBG( fprintf(stdout, "variable_declarations -> variable_declarations variable_declaration\n"); ) 
-            
-        }
+    | variable_declarations variable_declaration { DBG( fprintf(stdout, "variable_declarations -> variable_declarations variable_declaration\n"); ) }
     ;
 
 variable_declaration: 
@@ -122,7 +129,7 @@ read_statement:
     ;
 
 write_statement:
-    WRITE arith_expression SEMICOLON { DBG( fprintf(stdout, "write_statement -> write  arith_expression ;\n"); ) }
+    WRITE arith_expression SEMICOLON { DBG( fprintf(stdout, "write_statement -> write arith_expression ;\n"); ) }
     ;
 
 exit_statement:
@@ -134,8 +141,26 @@ while_statement:
     ;
 
 if_statement:
-    IF OPENP bool_expression CLOSEP statement %prec IFX { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement\n"); ) }
-    |   IF OPENP bool_expression CLOSEP statement ELSE statement { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement else statement\n"); ) }
+    IF OPENP bool_expression emit_branch CLOSEP emit_label statement emit_label { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement\n"); ) }
+    | IF OPENP bool_expression emit_branch CLOSEP emit_label statement ELSE emit_label statement { DBG( fprintf(stdout, "if_statement -> if ( bool_expression ) statement else statement\n"); ) }
+    ;
+
+emit_branch:
+    %empty {
+        if(strcmp($<string>0, "<") == 0) {
+            IDENT( 1, fprintf(stdout, "blt"); )
+            IDENT( 1, fprintf(stdout, "$t0, $t1, L%d\n", ifCount); )
+            IDENT( 1, fprintf(stdout, "b"); )
+            IDENT( 1, fprintf(stdout, "L%d\n", ifCount+1); )
+        }
+    }
+    ;
+
+emit_label:
+    %empty {
+        IDENT( 0, fprintf(stdout, "L%d:\n", ifCount); ) // new label
+        ifCount++;
+    }
     ;
 
 bool_expression:
@@ -158,7 +183,22 @@ bool_primary:
     |   arith_expression NONEQV arith_expression { DBG( fprintf(stdout, "bool_primary -> arith_expression != arith_expression\n"); ) }
     |   arith_expression GRE arith_expression { DBG( fprintf(stdout, "bool_primary -> arith_expression > arith_expression\n"); ) }
     |   arith_expression GREEQV arith_expression { DBG( fprintf(stdout, "bool_primary -> arith_expression >= arith_expression\n"); ) }
-    |   arith_expression LESS arith_expression { DBG( fprintf(stdout, "bool_primary -> arith_expression < arith_expression\n"); ) }
+    |   arith_expression LESS arith_expression { 
+            DBG( fprintf(stdout, "bool_primary -> arith_expression < arith_expression\n"); )
+            int absVal=abs( $<integer>3 );
+
+            IDENT( 1, fprintf(stdout, "la"); )
+            IDENT( 1, fprintf(stdout, "$t0, %s\n", $<string>1); )
+            IDENT( 1, fprintf(stdout, "li"); )
+            IDENT( 1, fprintf(stdout, "$t1, %d\n", absVal); )
+
+            if($<integer>3 < 0) {
+                IDENT( 1, fprintf(stdout, "neg"); )
+                IDENT( 1, fprintf(stdout, "$t1, $t1\n"); )
+            }
+
+            $<string>$ = $<string>2;
+        }
     |   arith_expression LESSEQV arith_expression { DBG( fprintf(stdout, "bool_primary -> arith_expression <= arith_expression\n"); ) }
     ;
 
@@ -167,7 +207,7 @@ compound_statement:
     ;
 
 assignment_statement:
-    IDENTIFIER ASSIGN arith_expression SEMICOLON {DBG( fprintf(stdout, "assignment_statement -> Identifier = arith_expression ;\n") )}
+    IDENTIFIER ASSIGN arith_expression SEMICOLON { DBG( fprintf(stdout, "assignment_statement -> Identifier = arith_expression ;\n") )}
     ;
 
 arith_expression:
@@ -185,7 +225,10 @@ arith_term:
 
 arith_factor:
     arith_primary { DBG( fprintf(stdout, "arith_factor -> arith_primary\n"); ) }
-    | SUB arith_primary %prec UMINUS { DBG( fprintf(stdout, "arith_factor -> - arith_primary\n"); ) }
+    | SUB arith_primary %prec UMINUS { 
+        DBG( fprintf(stdout, "arith_factor -> - arith_primary\n"); )
+        $<integer>$ = - $<integer>2;
+    }
     ;
 
 arith_primary:
@@ -199,7 +242,6 @@ extern FILE *yyin;
 main(int argc, char **argv) {
     if(argc==2 && strcmp(argv[1], "-p")==0)
         debug=1;
-    
     do {
         yyparse();
     } while(!feof(yyin));

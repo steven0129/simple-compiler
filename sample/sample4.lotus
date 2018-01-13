@@ -5,4 +5,8 @@ sum()
     int s;
 
     read n;
+
+    if (n < -1) {
+        write -1; exit;
+    }
 }
