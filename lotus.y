@@ -17,14 +17,7 @@ int iCount=0;
     __VA_ARGS__;
 #endif
 
-int ifCount=1;
-
-void emitLabel() {
-    char temp[2];
-    sprintf(temp, "%d", ifCount);
-    IDENT( 0, fprintf(stdout, "L%s:\n", temp); )
-}
-
+int labelCount=1;
 %}
 %union {
     int integer;
@@ -149,16 +142,16 @@ emit_branch:
     %empty {
         if(strcmp($<string>0, "<") == 0)  IDENT( 1, fprintf(stdout, "blt"); )
         
-        IDENT( 1, fprintf(stdout, "$t0, $t1, L%d\n", ifCount); )
+        IDENT( 1, fprintf(stdout, "$t0, $t1, L%d\n", labelCount); )
         IDENT( 1, fprintf(stdout, "b"); )
-        IDENT( 1, fprintf(stdout, "L%d\n", ifCount+1); )
+        IDENT( 1, fprintf(stdout, "L%d\n", labelCount+1); )
     }
     ;
 
 emit_label:
     %empty {
-        IDENT( 0, fprintf(stdout, "L%d:\n", ifCount); ) // new label
-        ifCount++;
+        IDENT( 0, fprintf(stdout, "L%d:\n", labelCount); ) // new label
+        labelCount++;
     }
     ;
 
