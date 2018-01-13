@@ -6,9 +6,12 @@ sum()
 
     read n;
 
-    if (n < -1) {
-        write -1; exit;
-    } else {
+    if (n < 1) {
         write -1;
+    } else {
+        s = 2;
+        while(n > 0) {}
     }
+
+    exit;
 }
