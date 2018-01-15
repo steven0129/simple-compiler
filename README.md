@@ -13,6 +13,8 @@ $ make
 $ ./parser < sample/sample4.lotus
 ```
 
+![](./demo.gif)
+
 ## Print sementic rule
 
 ```
